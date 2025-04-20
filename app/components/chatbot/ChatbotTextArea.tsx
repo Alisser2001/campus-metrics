@@ -18,7 +18,7 @@ export const ChatbotTextArea: FC<Props> = ({ handleSubmit, input, status, handle
             <input
                 type='text'
                 className="border-none outline-none focus:ring-0 w-[90%]"
-                placeholder="Ask a question..."
+                placeholder="Haz una pregunta..."
                 name="prompt"
                 disabled={status !== 'awaiting_message'}
                 value={input}
