@@ -1,15 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { FileText, Download, MoreHorizontal, Eye, Edit, Trash2, Star, Filter, Search, Calendar, ArrowUp, ArrowDown } from "lucide-react"
+import { Download, MoreHorizontal, Eye, Edit, Trash2, Filter, Search, Calendar, ArrowUp, ArrowDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -71,7 +70,7 @@ const documents = [
 ]
 
 export function DocumentList() {
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm] = useState("");
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
     const filteredDocuments = documents.filter(
