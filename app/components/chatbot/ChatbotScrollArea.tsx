@@ -5,7 +5,6 @@ import { Message } from '@ai-sdk/react';
 import { ChatBotIcon } from "../icons/ChatbotIcon";
 import { ChatUserIcon } from "../icons/ChatuserIcon";
 import { CardContent } from "@/components/ui/card";
-import { Avatar } from "@/components/ui/avatar";
 
 interface ScrollAreaProps {
     messages: Message[]
