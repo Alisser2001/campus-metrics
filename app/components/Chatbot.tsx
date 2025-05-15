@@ -30,8 +30,10 @@ export const Chatbot: FC = () => {
   }, [threadId, router]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('threadId');
-    if (saved) setThreadId(saved);
+    const savedThreadId = localStorage.getItem('threadId');
+    if (savedThreadId) {
+      setThreadId(savedThreadId);
+    }
   }, []);
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export const Chatbot: FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const currentThreadId = threadId || null;
+    const currentThreadId = threadId || crypto.randomUUID();
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
@@ -87,8 +89,8 @@ export const Chatbot: FC = () => {
       }
 
       if (!threadId) {
-        const saved = localStorage.getItem('threadId');
-        if (saved) setThreadId(saved);
+        setThreadId(currentThreadId);
+        localStorage.setItem('threadId', currentThreadId);
       }
 
       setInput('');
