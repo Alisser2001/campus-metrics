@@ -31,6 +31,7 @@
 // }
 // app/api/assistant/route.ts
 'use server';
+/*
 import { VertexAI } from '@google-cloud/vertexai';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -198,3 +199,4 @@ export async function POST(req: NextRequest) {
     },
   });
 }
+*/
