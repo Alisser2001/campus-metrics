@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { Download, MoreHorizontal, Eye, Edit, Trash2, Filter, Search, Calendar, ArrowUp, ArrowDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -15,73 +14,27 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { formatDate } from "@/utils/date-utils"
 
-const documents = [
-    {
-        id: 1,
-        name: "Presupuesto Anual 2023",
-        category: "Presupuesto Anual",
-        type: "PDF",
-        size: "2.4 MB",
-        uploadedBy: "Juan Pérez",
-        uploadedAt: "15/03/2023",
-        status: "Aprobado",
-    },
-    {
-        id: 2,
-        name: "Informe Financiero Q1",
-        category: "Ejecución Presupuestal",
-        type: "XLSX",
-        size: "1.8 MB",
-        uploadedBy: "María López",
-        uploadedAt: "05/04/2023",
-        status: "Revisión",
-    },
-    {
-        id: 3,
-        name: "Plan de Inversiones 2023-2024",
-        category: "Auditoría y Control",
-        type: "DOCX",
-        size: "3.2 MB",
-        uploadedBy: "Carlos Rodríguez",
-        uploadedAt: "22/02/2023",
-        status: "Aprobado",
-    },
-    {
-        id: 4,
-        name: "Ejecución Presupuestal Enero",
-        category: "Informes Financieros",
-        type: "PDF",
-        size: "4.1 MB",
-        uploadedBy: "Ana Martínez",
-        uploadedAt: "10/02/2023",
-        status: "Archivado",
-    },
-    {
-        id: 5,
-        name: "Proyección Gastos Facultades",
-        category: "Informes Financieros",
-        type: "XLSX",
-        size: "2.7 MB",
-        uploadedBy: "Pedro Gómez",
-        uploadedAt: "18/03/2023",
-        status: "Borrador",
-    },
-]
-
-export function DocumentList() {
-    const [searchTerm] = useState("");
-    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-
-    const filteredDocuments = documents.filter(
-        (doc) =>
-            doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            doc.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            doc.uploadedBy.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-
-    const toggleSort = () => {
-        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+export function DocumentList({
+    searchTerm,
+    setSearchTerm,
+    toggleSort,
+    sortDirection,
+    sortedDocuments,
+    selectedType,
+    setSelectedType,
+    selectedYear,
+    setSelectedYear
+}: any) {
+    const handleDownload = (url: string, fileName: string) => {
+        const link = document.createElement("a");
+        link.href = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/campus-metrics/`+url;
+        link.download = fileName;
+        link.target = "_blank";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     return (
@@ -92,10 +45,17 @@ export function DocumentList() {
                     <Input
                         type="search"
                         placeholder="Buscar en documentos..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm((e.target.value))}
                         className="pl-9 bg-gray-50 border-1 border-gray-200 focus:border-gray-300"
                     />
                 </div>
-                <Select>
+                <Select
+                    value={selectedType}
+                    onValueChange={(value) =>
+                        setSelectedType(value)
+                    }
+                >
                     <SelectTrigger className="w-48 border-1 border-gray-200 focus:border-gray-300 cursor-pointer">
                         <div className="flex items-center">
                             <Filter className="h-4 w-4 mr-2 " />
@@ -109,7 +69,12 @@ export function DocumentList() {
                         <SelectItem value="word" className="cursor-pointer focus:bg-gray-200">Documentos Word</SelectItem>
                     </SelectContent>
                 </Select>
-                <Select>
+                <Select
+                    value={selectedYear}
+                    onValueChange={(value) =>
+                        setSelectedYear(value)
+                    }
+                >
                     <SelectTrigger className="w-48 border-1 border-gray-200 focus:border-gray-300 cursor-pointer">
                         <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-2" />
@@ -118,9 +83,12 @@ export function DocumentList() {
                     </SelectTrigger>
                     <SelectContent className="border-1 border-gray-200 focus:border-gray-300 bg-white">
                         <SelectItem className="cursor-pointer focus:bg-gray-200" value="all">Todos los periodos</SelectItem>
+                        <SelectItem className="cursor-pointer focus:bg-gray-200" value="2025">2025</SelectItem>
                         <SelectItem className="cursor-pointer focus:bg-gray-200" value="2024">2024</SelectItem>
                         <SelectItem className="cursor-pointer focus:bg-gray-200" value="2023">2023</SelectItem>
                         <SelectItem className="cursor-pointer focus:bg-gray-200" value="2022">2022</SelectItem>
+                        <SelectItem className="cursor-pointer focus:bg-gray-200" value="2021">2021</SelectItem>
+                        <SelectItem className="cursor-pointer focus:bg-gray-200" value="2020">2020</SelectItem>
                     </SelectContent>
                 </Select>
                 <Button variant="outline" onClick={toggleSort} className="border-1 border-gray-200 focus:border-gray-300 cursor-pointer">
@@ -148,36 +116,39 @@ export function DocumentList() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredDocuments.map((doc) => (
+                            {sortedDocuments.map((doc: any) => (
                                 <TableRow key={doc.id} className="border-gray-200">
                                     <TableCell className="font-medium">{doc.name}</TableCell>
-                                    <TableCell>{doc.category}</TableCell>
-                                    <TableCell>{doc.type}</TableCell>
-                                    <TableCell>{doc.size}</TableCell>
-                                    <TableCell>{doc.uploadedBy}</TableCell>
-                                    <TableCell>{doc.uploadedAt}</TableCell>
+                                    <TableCell>{doc.doc_categorie.categorie}</TableCell>
+                                    <TableCell>{doc.doc_type.type}</TableCell>
+                                    <TableCell>{doc.size_mb} MB</TableCell>
+                                    <TableCell>{doc.updated_by_user.name ?? 'Sin Nombre'}</TableCell>
+                                    <TableCell>{formatDate(doc.updated_at)}</TableCell>
                                     <TableCell>
                                         <Badge
                                             variant={
-                                                doc.status === "Aprobado"
+                                                doc.doc_state.state === "approved"
                                                     ? "default"
-                                                    : doc.status === "Revisión"
+                                                    : doc.doc_state.state === "review"
                                                         ? "default"
-                                                        : doc.status === "Borrador"
+                                                        : doc.doc_state.state === "draft"
                                                             ? "outline"
                                                             : "secondary"
                                             }
                                             className={
-                                                doc.status === "Aprobado"
+                                                doc.doc_state.state === "approved"
                                                     ? "bg-green-100 text-green-800 hover:bg-green-100"
-                                                    : doc.status === "Revisión"
+                                                    : doc.doc_state.state === "review"
                                                         ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
-                                                        : doc.status === "Borrador"
+                                                        : doc.doc_state.state === "draft"
                                                             ? "bg-gray-100 text-gray-800 hover:bg-gray-100 border-none"
                                                             : "border-gray-300"
                                             }
                                         >
-                                            {doc.status}
+                                            {doc.doc_state.state === 'approved' ? 'Aprobado' :
+                                                doc.doc_state.state === 'review' ? 'Revisión' :
+                                                    doc.doc_state.state === 'archived' ? 'Archivado' :
+                                                        'Borrador'}
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-right">
@@ -190,17 +161,16 @@ export function DocumentList() {
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end" className="border-1 border-gray-200 focus:border-gray-300 bg-white">
                                                 <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                                                <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer">
-                                                    <Eye className="h-4 w-4" />
-                                                    <span>Ver</span>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer">
+                                                <DropdownMenuItem
+                                                    className="focus:bg-gray-200 cursor-pointer"
+                                                    onClick={() => handleDownload(doc.doc_path, doc.name)}
+                                                >
                                                     <Download className="h-4 w-4" />
                                                     <span>Descargar</span>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer">
                                                     <Edit className="h-4 w-4" />
-                                                    <span>Editar</span>
+                                                    <span>Actualizar</span>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer text-red-600">
                                                     <Trash2 className="h-4 w-4" />
