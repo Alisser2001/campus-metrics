@@ -23,7 +23,6 @@ import { categoryService } from "@/utils/services/categories"
 import { typeService } from "@/utils/services/types"
 import { stateService } from "@/utils/services/states"
 import { toast } from "sonner"
-import { LoadingSpinner } from "./Loading"
 import { documentService } from "@/utils/services/documents"
 
 interface NewDocumentModalProps {
@@ -43,7 +42,6 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
     const [dragActive, setDragActive] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [activeCategorie, setActiveCategorie] = useState<string>('all_docs');
     const [documentCategories, setDocumentCategories] = useState<any[]>([]);
     const [documentTypes, setDocumentTypes] = useState<any[]>([]);
     const [documentStates, setDocumentStates] = useState<any[]>([]);
