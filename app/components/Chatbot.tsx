@@ -37,7 +37,7 @@ export const Chatbot: FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const currentThreadId = threadId || crypto.randomUUID();
+    const currentThreadId = threadId ?? crypto.randomUUID();
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
@@ -47,7 +47,7 @@ export const Chatbot: FC = () => {
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      const res = await fetch('https://emmanuelbustamante.app.n8n.cloud/webhook/9de68c11-fb69-4bfa-b2e5-8ae99fb55042', {
+      const res = await fetch('https://campus-metrics.app.n8n.cloud/webhook/d7b78a6c-ee96-46a7-bb54-514463d721b8', {
         method: 'POST',
         body: JSON.stringify({ message: input, sessionId: currentThreadId }),
         headers: { 'Content-Type': 'application/json' },
@@ -56,7 +56,7 @@ export const Chatbot: FC = () => {
       if (!res.ok) throw new Error('Error en la respuesta del servidor');
 
       const data = await res.json();
-      const output = data[0]?.output || 'Sin respuesta del asistente';
+      const output = data[0]?.output ?? 'Sin respuesta del asistente';
       const assistantId = crypto.randomUUID();
 
       setMessages(prev => [...prev, {
