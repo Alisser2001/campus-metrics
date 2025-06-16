@@ -94,6 +94,7 @@ export function Dashboard({
                         setSelectedType={setSelectedType}
                         selectedYear={selectedYear}
                         setSelectedYear={setSelectedYear}
+                        loadData={loadData}
                     />
                 </TabsContent>
 

@@ -20,11 +20,12 @@ export const ScrollAreaCont: FC<ScrollAreaProps> = ({ messages }) => {
                             key={message.id}
                             className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                         >
-                            <div className={`flex gap-2 max-w-[80%] ${message.role === "user" ? "flex-row-reverse" : ""}`}>
-                                {message.role !== 'user' && <ChatBotIcon />}
+                            <div className={`flex gap-2 max-w-[90%] m-0 p-0 ${message.role === "user" ? "flex-row-reverse" : ""}`}>
+                                {message.role !== 'user' && <div className="w-[40px]">
+                                    <ChatBotIcon />
+                                </div>}
                                 <div
-                                    className={`rounded-lg p-3 text-md font-semibold ${message.role === "user" ? "bg-green-700 text-white" : "bg-gray-100 dark:bg-gray-800"
-                                        }`}
+                                    className={`rounded-lg p-3 text-md font-semibold bg-green-700 text-white max-w-[80%]`}
                                 >
                                     <p>{message.content}</p>
                                     {message.createdAt ?
@@ -34,7 +35,9 @@ export const ScrollAreaCont: FC<ScrollAreaProps> = ({ messages }) => {
                                                 : message.createdAt}
                                         </p> : null}
                                 </div>
-                                {message.role === 'user' && <ChatUserIcon />}
+                                {message.role === 'user' && <div className="w-[40px]">
+                                    <ChatUserIcon />
+                                </div>}
                             </div>
                         </div>
                     ))}

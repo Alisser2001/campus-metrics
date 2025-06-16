@@ -112,4 +112,45 @@ export const documentService = {
             throw err;
         }
     },
+
+    async deleteDocument(id: string) {
+        try {
+            const { data: doc, error: fetchError } = await supabase
+                .from('doc_info')
+                .select('doc_path')
+                .eq('id', id)
+                .single();
+
+            if (fetchError) {
+                console.error('Error al obtener path del documento:', fetchError);
+                throw fetchError;
+            }
+
+            const { error: removeError } = await supabase
+                .storage
+                .from('campus-metrics')
+                .remove([doc.doc_path]);
+
+            if (removeError) {
+                console.error('Error al eliminar archivo:', removeError);
+                throw removeError;
+            }
+
+            const { error: deleteError } = await supabase
+                .from('doc_info')
+                .delete()
+                .eq('id', id);
+
+            if (deleteError) {
+                console.error('Error al eliminar registro:', deleteError);
+                throw deleteError;
+            }
+
+            return true;
+        } catch (err) {
+            console.error('Error general en deleteDocument:', err);
+            throw err;
+        }
+    },
+
 }
