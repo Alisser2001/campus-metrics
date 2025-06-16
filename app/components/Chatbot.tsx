@@ -37,7 +37,7 @@ export const Chatbot: FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const currentThreadId = threadId || crypto.randomUUID();
+    const currentThreadId = threadId ?? crypto.randomUUID();
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
@@ -56,7 +56,7 @@ export const Chatbot: FC = () => {
       if (!res.ok) throw new Error('Error en la respuesta del servidor');
 
       const data = await res.json();
-      const output = data[0]?.output || 'Sin respuesta del asistente';
+      const output = data[0]?.output ?? 'Sin respuesta del asistente';
       const assistantId = crypto.randomUUID();
 
       setMessages(prev => [...prev, {
