@@ -193,10 +193,10 @@ export function DocumentList({
                                                         <Download className="h-4 w-4" />
                                                         <span>Descargar</span>
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer">
+                                                    {/*<DropdownMenuItem className="focus:bg-gray-200 cursor-pointer">
                                                         <Edit className="h-4 w-4" />
                                                         <span>Actualizar</span>
-                                                    </DropdownMenuItem>
+                                                    </DropdownMenuItem>*/}
                                                     <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer text-red-600"
                                                         onClick={() => onOpen(doc)}
                                                     >
