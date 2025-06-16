@@ -220,8 +220,8 @@ export function DocumentList({
                             Confirmar eliminación
                         </h2>
                         <p className="text-sm text-gray-600 mt-2">
-                            ¿Estás seguro de que deseas eliminar el documento "
-                            <span className="font-semibold">{selectedDoc?.name}</span>"?
+                            ¿Estás seguro de que deseas eliminar el documento
+                            <span className="font-semibold">{selectedDoc?.name}</span>?
                             Esta acción no se puede deshacer.
                         </p>
                         <div className="mt-6 flex justify-end gap-2">
