@@ -83,7 +83,7 @@ export default function Home() {
         <div className="w-screen h-screen overflow-hidden m-0 p-0 flex justify-center items-center">
           <LoadingSpinner />
         </div> :
-        <div className="w-full h-full overflow-hidden m-0 p-0">
+        <div className="w-full h-full m-0 p-0">
           {sidebarVisible && <Sidebar setActiveCategorie={setActiveCategorie} categories={categories} activeCategorie={activeCategorie} />}
           <section className={`w-full h-full overflow-y-auto overflow-x-hidden pt-16 ${sidebarVisible ? 'pl-96' : 'pl-0'} bg-gray-50`}>
             <Dashboard

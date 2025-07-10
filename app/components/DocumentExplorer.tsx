@@ -1,6 +1,6 @@
 "use client"
 
-import { Download, MoreHorizontal, Trash2, Filter, Search, Calendar, ArrowUp, ArrowDown } from "lucide-react"
+import { Download, MoreHorizontal, Trash2, Filter, Search, Calendar, ArrowUp, ArrowDown, Edit, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import {
@@ -28,10 +28,19 @@ export function DocumentList({
     setSelectedType,
     selectedYear,
     setSelectedYear,
-    loadData
+    loadData,
+    setEditDocModalVisible,
+    setSelectedEditDoc
 }: any) {
     const [openModal, setOpenModal] = useState(false);
     const [selectedDoc, setSelectedDoc] = useState<any>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+    const totalItems = sortedDocuments.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentDocuments = sortedDocuments.slice(startIndex, endIndex);
 
     const handleDownload = (url: string, fileName: string) => {
         const link = document.createElement("a");
@@ -134,14 +143,14 @@ export function DocumentList({
                                     <TableHead>Categoría</TableHead>
                                     <TableHead>Tipo</TableHead>
                                     <TableHead>Tamaño</TableHead>
-                                    <TableHead>Subido por</TableHead>
+                                    <TableHead>Actualizado por</TableHead>
                                     <TableHead>Ultima Actualizacion</TableHead>
                                     <TableHead>Estado</TableHead>
                                     <TableHead className="text-right">Acciones</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {sortedDocuments.map((doc: any) => (
+                                {currentDocuments.map((doc: any) => (
                                     <TableRow key={doc.id} className="border-gray-200">
                                         <TableCell className="font-medium">{doc.name}</TableCell>
                                         <TableCell>{doc.doc_categorie.categorie}</TableCell>
@@ -193,10 +202,15 @@ export function DocumentList({
                                                         <Download className="h-4 w-4" />
                                                         <span>Descargar</span>
                                                     </DropdownMenuItem>
-                                                    {/*<DropdownMenuItem className="focus:bg-gray-200 cursor-pointer">
+                                                    <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer"
+                                                        onClick={() => {
+                                                            setSelectedEditDoc(doc);
+                                                            setEditDocModalVisible(true);
+                                                        }}
+                                                    >
                                                         <Edit className="h-4 w-4" />
                                                         <span>Actualizar</span>
-                                                    </DropdownMenuItem>*/}
+                                                    </DropdownMenuItem>
                                                     <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer text-red-600"
                                                         onClick={() => onOpen(doc)}
                                                     >
@@ -212,6 +226,82 @@ export function DocumentList({
                         </Table>
                     </div>
                 </CardContent>
+                <div className="flex items-center justify-between px-6 pt-4 border-t border-gray-200">
+                    <div className="flex items-center text-sm text-gray-700">
+                        <span>
+                            Mostrando {startIndex + 1} a {Math.min(endIndex, totalItems)} de {totalItems} documentos
+                        </span>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(1)}
+                            disabled={currentPage === 1}
+                            className="border-gray-200 cursor-pointer"
+                        >
+                            <ChevronsLeft className="h-4 w-4" />
+                        </Button>
+
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="border-gray-200 cursor-pointer"
+                        >
+                            <ChevronLeft className="h-4 w-4" />
+                        </Button>
+
+                        <div className="flex items-center space-x-1">
+                            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                let pageNum;
+                                if (totalPages <= 5) {
+                                    pageNum = i + 1;
+                                } else if (currentPage <= 3) {
+                                    pageNum = i + 1;
+                                } else if (currentPage >= totalPages - 2) {
+                                    pageNum = totalPages - 4 + i;
+                                } else {
+                                    pageNum = currentPage - 2 + i;
+                                }
+
+                                return (
+                                    <Button
+                                        key={pageNum}
+                                        variant={currentPage === pageNum ? "default" : "outline"}
+                                        size="sm"
+                                        onClick={() => setCurrentPage(pageNum)}
+                                        className={currentPage === pageNum ? "bg-[#107C4C] text-white cursor-pointer" : "border-gray-200 cursor-pointer"}
+                                    >
+                                        {pageNum}
+                                    </Button>
+                                );
+                            })}
+                        </div>
+
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="border-gray-200 cursor-pointer"
+                        >
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(totalPages)}
+                            disabled={currentPage === totalPages}
+                            className="border-gray-200 cursor-pointer"
+                        >
+                            <ChevronsRight className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
             </Card>
             {openModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
