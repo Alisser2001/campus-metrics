@@ -23,7 +23,7 @@ export const ChatbotTextArea: FC<Props> = ({ handleSubmit, input, status, handle
                 disabled={status !== 'awaiting_message'}
                 value={input}
                 onChange={handleInputChange} />
-            <button type="submit" className="bg-[#035f2e] text-white rounded-full p-2">
+            <button type="submit" className="bg-[#33691e] text-white rounded-full p-2">
                 <SendIcon />
             </button>
         </form>

@@ -286,7 +286,7 @@ export function DocumentList({
                                         variant={currentPage === pageNum ? "default" : "outline"}
                                         size="sm"
                                         onClick={() => setCurrentPage(pageNum)}
-                                        className={currentPage === pageNum ? "bg-[#107C4C] text-white cursor-pointer" : "border-gray-200 cursor-pointer"}
+                                        className={currentPage === pageNum ? "bg-[#33691e] text-white cursor-pointer" : "border-gray-200 cursor-pointer"}
                                     >
                                         {pageNum}
                                     </Button>

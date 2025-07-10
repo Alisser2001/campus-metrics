@@ -25,7 +25,7 @@ export const ScrollAreaCont: FC<ScrollAreaProps> = ({ messages }) => {
                                     <ChatBotIcon />
                                 </div>}
                                 <div
-                                    className={`rounded-lg p-3 text-md font-semibold bg-green-700 text-white max-w-[80%]`}
+                                    className={`rounded-lg p-3 text-md font-semibold bg-[#33691e] text-white max-w-[80%]`}
                                 >
                                     <p>{message.content}</p>
                                     {message.createdAt ?
