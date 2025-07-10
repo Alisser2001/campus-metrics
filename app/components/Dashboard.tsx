@@ -43,7 +43,7 @@ export function Dashboard({
                         <TabsTrigger
                             value="documents"
                             className="
-                                    data-[state=active]:bg-[#107C4C]
+                                    data-[state=active]:bg-[#33691e]
                                     data-[state=active]:text-white
                                     transition-colors
                                     h-8
@@ -56,7 +56,7 @@ export function Dashboard({
                         {/*<TabsTrigger
                             value="recents"
                             className="
-                                    data-[state=active]:bg-[#107C4C]
+                                    data-[state=active]:bg-[#33691e]
                                     data-[state=active]:text-white
                                     transition-colors
                                     h-8
@@ -69,7 +69,7 @@ export function Dashboard({
                         <TabsTrigger
                             value="stadistics"
                             className="
-                                    data-[state=active]:bg-[#107C4C]
+                                    data-[state=active]:bg-[#33691e]
                                     data-[state=active]:text-white
                                     transition-colors
                                     h-8
@@ -80,7 +80,7 @@ export function Dashboard({
                             Estadísticas
                         </TabsTrigger>*/}
                     </TabsList>
-                    <Button className="bg-[#0A5C36] hover:bg-[#107C4C] text-white h-10 cursor-pointer" onClick={() => setNewDocModalVisible(true)}>
+                    <Button className="bg-[#33691e] hover:bg-[#2e5d1a] text-white h-10 cursor-pointer" onClick={() => setNewDocModalVisible(true)}>
                         <FileText className="h-4 w-4" /> Nuevo documento
                     </Button>
                 </div>

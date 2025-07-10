@@ -13,7 +13,7 @@ const Sidebar = ({ setActiveCategorie, categories, activeCategorie }: any) => {
                         <li key='all_docs' className="mb-1">
                             <Button
                                 variant="ghost"
-                                className={`w-full justify-between text-gray-700 hover:text-[#0A5C36] hover:bg-[#E8F5E9] cursor-pointer ${activeCategorie === 'all_docs' && 'text-[#0A5C36] bg-[#E8F5E9]'}`}
+                                className={`w-full justify-between text-gray-700 hover:text-[#33691e] hover:bg-[#E8F5E9] cursor-pointer ${activeCategorie === 'all_docs' && 'text-[#33691e] bg-[#E8F5E9]'}`}
                                 onClick={() => setActiveCategorie('all_docs')}
                             >
                                 <span>Todos los Documentos</span>
@@ -26,7 +26,7 @@ const Sidebar = ({ setActiveCategorie, categories, activeCategorie }: any) => {
                             <li key={category.folder_path} className="mb-1">
                                 <Button
                                     variant="ghost"
-                                    className={`w-full justify-between text-gray-700 hover:text-[#0A5C36] hover:bg-[#E8F5E9] cursor-pointer ${activeCategorie === category.folder_path && 'text-[#0A5C36] bg-[#E8F5E9]'}`}
+                                    className={`w-full justify-between text-gray-700 hover:text-[#33691e] hover:bg-[#E8F5E9] cursor-pointer ${activeCategorie === category.folder_path && 'text-[#33691e] bg-[#E8F5E9]'}`}
                                     onClick={() => setActiveCategorie(category.folder_path)}
                                 >
                                     <span>{category.categorie}</span>
