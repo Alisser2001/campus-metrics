@@ -1,5 +1,4 @@
 "use client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DocumentList } from "./DocumentExplorer";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
