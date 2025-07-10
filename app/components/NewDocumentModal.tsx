@@ -16,6 +16,7 @@ import { typeService } from "@/utils/services/types"
 import { stateService } from "@/utils/services/states"
 import { toast } from "sonner"
 import { documentService } from "@/utils/services/documents"
+import { useUserData } from "@/hooks/useUserData"
 
 interface NewDocumentModalProps {
     onOpenChange: (open: boolean) => void
@@ -43,6 +44,8 @@ export function NewDocumentModal({
     const [documentCategories, setDocumentCategories] = useState<any[]>([]);
     const [documentTypes, setDocumentTypes] = useState<any[]>([]);
     const [documentStates, setDocumentStates] = useState<any[]>([]);
+
+    const { user } = useUserData();
 
     async function loadLocalData() {
         try {
@@ -179,6 +182,8 @@ export function NewDocumentModal({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
+        if (!user) return;
+        console.log(user.id)
         if (!validateForm()) {
             return
         }
@@ -195,7 +200,7 @@ export function NewDocumentModal({
                     docTypeId: docType.id,
                     docStateId: docState.id,
                     file: docFile,
-                    updatedBy: 'f8945315-25c6-47ef-aadb-67df06d91d19'
+                    updatedBy: user.id
                 });
                 toast("Documento creado exitosamente");
             } else {
@@ -208,7 +213,7 @@ export function NewDocumentModal({
                     docTypeId: docType.id,
                     docStateId: docState.id,
                     file: docFile,
-                    updatedBy: 'f8945315-25c6-47ef-aadb-67df06d91d19'
+                    updatedBy: user.id
                 });
                 toast("Documento actualizado exitosamente");
             }

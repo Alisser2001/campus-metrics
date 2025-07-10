@@ -1,6 +1,6 @@
 "use client"
 
-import { Download, MoreHorizontal, Trash2, Filter, Search, Calendar, ArrowUp, ArrowDown, Edit, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from "lucide-react"
+import { Download, MoreHorizontal, Trash2, Filter, Search, Calendar, ArrowUp, ArrowDown, Edit, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import {
@@ -136,94 +136,107 @@ export function DocumentList({
                 </CardHeader>
                 <CardContent>
                     <div className="rounded-md border-1 border-gray-200 overflow-hidden">
-                        <Table className="overflow-x-auto">
-                            <TableHeader className="h-12 bg-[#107C4C] text-white font-bold">
-                                <TableRow className="w-full h-full border-gray-200">
-                                    <TableHead>Nombre</TableHead>
-                                    <TableHead>Categoría</TableHead>
-                                    <TableHead>Tipo</TableHead>
-                                    <TableHead>Tamaño</TableHead>
-                                    <TableHead>Actualizado por</TableHead>
-                                    <TableHead>Ultima Actualizacion</TableHead>
-                                    <TableHead>Estado</TableHead>
-                                    <TableHead className="text-right">Acciones</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {currentDocuments.map((doc: any) => (
-                                    <TableRow key={doc.id} className="border-gray-200">
-                                        <TableCell className="font-medium">{doc.name}</TableCell>
-                                        <TableCell>{doc.doc_categorie.categorie}</TableCell>
-                                        <TableCell>{doc.doc_type.type}</TableCell>
-                                        <TableCell>{doc.size_mb} MB</TableCell>
-                                        <TableCell>{doc.updated_by_user.name ?? 'Sin Nombre'}</TableCell>
-                                        <TableCell>{formatDate(doc.updated_at)}</TableCell>
-                                        <TableCell>
-                                            <Badge
-                                                variant={
-                                                    doc.doc_state.state === "approved"
-                                                        ? "default"
-                                                        : doc.doc_state.state === "review"
-                                                            ? "default"
-                                                            : doc.doc_state.state === "draft"
-                                                                ? "outline"
-                                                                : "secondary"
-                                                }
-                                                className={
-                                                    doc.doc_state.state === "approved"
-                                                        ? "bg-green-100 text-green-800 hover:bg-green-100"
-                                                        : doc.doc_state.state === "review"
-                                                            ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
-                                                            : doc.doc_state.state === "draft"
-                                                                ? "bg-gray-100 text-gray-800 hover:bg-gray-100 border-none"
-                                                                : "border-gray-300"
-                                                }
-                                            >
-                                                {doc.doc_state.state === 'approved' ? 'Aprobado' :
-                                                    doc.doc_state.state === 'review' ? 'Revisión' :
-                                                        doc.doc_state.state === 'archived' ? 'Archivado' :
-                                                            'Borrador'}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon">
-                                                        <MoreHorizontal className="h-4 w-4 cursor-pointer" />
-                                                        <span className="sr-only">Acciones</span>
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end" className="border-1 border-gray-200 focus:border-gray-300 bg-white">
-                                                    <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                                                    <DropdownMenuItem
-                                                        className="focus:bg-gray-200 cursor-pointer"
-                                                        onClick={() => handleDownload(doc.doc_path, doc.name)}
-                                                    >
-                                                        <Download className="h-4 w-4" />
-                                                        <span>Descargar</span>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer"
-                                                        onClick={() => {
-                                                            setSelectedEditDoc(doc);
-                                                            setEditDocModalVisible(true);
-                                                        }}
-                                                    >
-                                                        <Edit className="h-4 w-4" />
-                                                        <span>Actualizar</span>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer text-red-600"
-                                                        onClick={() => onOpen(doc)}
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                        <span>Eliminar</span>
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </TableCell>
+                        {!currentDocuments || currentDocuments.length === 0 ?
+                            <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
+                                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                                    <FileText className="w-12 h-12 text-gray-400" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                    No hay documentos disponibles
+                                </h3>
+                                <p className="text-gray-500 max-w-md">
+                                    Aún no has agregado ningún documento. Comienza subiendo tu primer archivo para organizar tu información.
+                                </p>
+                            </div>
+                            :
+                            <Table className="overflow-x-auto">
+                                <TableHeader className="h-12 bg-[#33691e] text-white font-bold">
+                                    <TableRow className="w-full h-full border-gray-200">
+                                        <TableHead>Nombre</TableHead>
+                                        <TableHead>Categoría</TableHead>
+                                        <TableHead>Tipo</TableHead>
+                                        <TableHead>Tamaño</TableHead>
+                                        <TableHead>Actualizado por</TableHead>
+                                        <TableHead>Ultima Actualizacion</TableHead>
+                                        <TableHead>Estado</TableHead>
+                                        <TableHead className="text-right">Acciones</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {currentDocuments.map((doc: any) => (
+                                        <TableRow key={doc.id} className="border-gray-200">
+                                            <TableCell className="font-medium">{doc.name}</TableCell>
+                                            <TableCell>{doc.doc_categorie.categorie}</TableCell>
+                                            <TableCell>{doc.doc_type.type}</TableCell>
+                                            <TableCell>{doc.size_mb} MB</TableCell>
+                                            <TableCell>{doc.updated_by_user.name ?? 'Sin Nombre'}</TableCell>
+                                            <TableCell>{formatDate(doc.updated_at)}</TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    variant={
+                                                        doc.doc_state.state === "approved"
+                                                            ? "default"
+                                                            : doc.doc_state.state === "review"
+                                                                ? "default"
+                                                                : doc.doc_state.state === "draft"
+                                                                    ? "outline"
+                                                                    : "secondary"
+                                                    }
+                                                    className={
+                                                        doc.doc_state.state === "approved"
+                                                            ? "bg-green-100 text-green-800 hover:bg-green-100"
+                                                            : doc.doc_state.state === "review"
+                                                                ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
+                                                                : doc.doc_state.state === "draft"
+                                                                    ? "bg-gray-100 text-gray-800 hover:bg-gray-100 border-none"
+                                                                    : "border-gray-300"
+                                                    }
+                                                >
+                                                    {doc.doc_state.state === 'approved' ? 'Aprobado' :
+                                                        doc.doc_state.state === 'review' ? 'Revisión' :
+                                                            doc.doc_state.state === 'archived' ? 'Archivado' :
+                                                                'Borrador'}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" size="icon">
+                                                            <MoreHorizontal className="h-4 w-4 cursor-pointer" />
+                                                            <span className="sr-only">Acciones</span>
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end" className="border-1 border-gray-200 focus:border-gray-300 bg-white">
+                                                        <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                                                        <DropdownMenuItem
+                                                            className="focus:bg-gray-200 cursor-pointer"
+                                                            onClick={() => handleDownload(doc.doc_path, doc.name)}
+                                                        >
+                                                            <Download className="h-4 w-4" />
+                                                            <span>Descargar</span>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer"
+                                                            onClick={() => {
+                                                                setSelectedEditDoc(doc);
+                                                                setEditDocModalVisible(true);
+                                                            }}
+                                                        >
+                                                            <Edit className="h-4 w-4" />
+                                                            <span>Actualizar</span>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem className="focus:bg-gray-200 cursor-pointer text-red-600"
+                                                            onClick={() => onOpen(doc)}
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                            <span>Eliminar</span>
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>}
                     </div>
                 </CardContent>
                 <div className="flex items-center justify-between px-6 pt-4 border-t border-gray-200">

@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/client';
+import { createClient as serverClient } from '../supabase/server';
 
 const supabase = createClient();
 
