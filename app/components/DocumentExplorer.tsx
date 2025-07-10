@@ -73,8 +73,8 @@ export function DocumentList({
     return (
         <>
             <Card className="flex flex-col w-full h-auto overflow-x-hidden overflow-y-auto border-1 border-gray-200 mt-4 bg-white">
-                <CardHeader className="flex flex-row items-center justify-between w-full">
-                    <div className="relative flex-1">
+                <CardHeader className="flex flex-col lg:flex-row items-center justify-between w-full">
+                    <div className="relative flex-1 w-full lg:w-auto">
                         <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                         <Input
                             type="search"
@@ -90,7 +90,7 @@ export function DocumentList({
                             setSelectedType(value)
                         }
                     >
-                        <SelectTrigger className="w-48 border-1 border-gray-200 focus:border-gray-300 cursor-pointer">
+                        <SelectTrigger className="w-full lg:w-48 border-1 border-gray-200 focus:border-gray-300 cursor-pointer">
                             <div className="flex items-center">
                                 <Filter className="h-4 w-4 mr-2 " />
                                 <SelectValue placeholder="Filtrar por" />
@@ -109,7 +109,7 @@ export function DocumentList({
                             setSelectedYear(value)
                         }
                     >
-                        <SelectTrigger className="w-48 border-1 border-gray-200 focus:border-gray-300 cursor-pointer">
+                        <SelectTrigger className="w-full lg:w-48 border-1 border-gray-200 focus:border-gray-300 cursor-pointer">
                             <div className="flex items-center">
                                 <Calendar className="h-4 w-4 mr-2" />
                                 <SelectValue placeholder="Periodo" />
@@ -125,7 +125,7 @@ export function DocumentList({
                             <SelectItem className="cursor-pointer focus:bg-gray-200" value="2020">2020</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Button variant="outline" onClick={toggleSort} className="border-1 border-gray-200 focus:border-gray-300 cursor-pointer">
+                    <Button variant="outline" onClick={toggleSort} className="border-1 border-gray-200 focus:border-gray-300 cursor-pointer w-full lg:w-auto">
                         {sortDirection === 'asc' ? (
                             <ArrowUp className="h-4 w-4" />
                         ) : (
@@ -239,14 +239,14 @@ export function DocumentList({
                             </Table>}
                     </div>
                 </CardContent>
-                <div className="flex items-center justify-between px-6 pt-4 border-t border-gray-200">
-                    <div className="flex items-center text-sm text-gray-700">
+                <div className="flex items-center justify-center lg:justify-between px-6 pt-4 border-t border-gray-200">
+                    <div className="items-center text-sm text-gray-700 hidden lg:flex">
                         <span>
                             Mostrando {startIndex + 1} a {Math.min(endIndex, totalItems)} de {totalItems} documentos
                         </span>
                     </div>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 w-full lg:w-auto">
                         <Button
                             variant="outline"
                             size="sm"

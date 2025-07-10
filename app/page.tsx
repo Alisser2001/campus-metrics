@@ -85,7 +85,7 @@ export default function Home() {
         </div> :
         <div className="w-full h-full m-0 p-0">
           {sidebarVisible && <Sidebar setActiveCategorie={setActiveCategorie} categories={categories} activeCategorie={activeCategorie} />}
-          <section className={`w-full h-full overflow-y-auto overflow-x-hidden pt-16 ${sidebarVisible ? 'pl-96' : 'pl-0'} bg-gray-50`}>
+          <section className={`w-full h-full overflow-y-auto overflow-x-hidden pt-16 ${sidebarVisible ? 'pl-80 lg:pl-96' : 'pl-0'} bg-gray-50`}>
             <Dashboard
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
