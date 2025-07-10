@@ -80,7 +80,7 @@ export const Chatbot: FC = () => {
   return (
     <>
       {isOpen ? (
-        <section className="flex flex-col justify-between items-center absolute z-10 bottom-[10px] m-3 md:right-[20px] md:bottom-[20px] w-[90%] md:w-[450px] h-[600px] rounded-lg overflow-hidden border border-solid border-[rgba(0,0,0,0.16)] pb-4 bg-white animate-expand-bottom-left">
+        <section className="flex flex-col justify-between items-center fixed z-10 bottom-[10px] m-3 md:right-[20px] md:bottom-[20px] w-[90%] md:w-[450px] h-[600px] rounded-lg overflow-hidden border border-solid border-[rgba(0,0,0,0.16)] pb-4 bg-white animate-expand-bottom-left">
           <ChatbotHead isOpen={isOpen} setIsOpen={setIsOpen} />
           <ScrollAreaCont messages={messages} />
           <ChatbotTextArea

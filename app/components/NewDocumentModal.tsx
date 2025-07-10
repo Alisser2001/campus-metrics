@@ -4,14 +4,6 @@ import type React from "react"
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -26,12 +18,18 @@ import { toast } from "sonner"
 import { documentService } from "@/utils/services/documents"
 
 interface NewDocumentModalProps {
-    open: boolean
     onOpenChange: (open: boolean) => void
     loadData: () => void
+    editingDocument?: any
+    mode?: 'create' | 'edit'
 }
 
-export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentModalProps) {
+export function NewDocumentModal({
+    onOpenChange,
+    loadData,
+    editingDocument,
+    mode = 'create'
+}: NewDocumentModalProps) {
     const [docName, setDocName] = useState<any>(null);
     const [description, setDescription] = useState<any>(null);
     const [docCategory, setDocCategory] = useState<any>(null);
@@ -66,6 +64,31 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
         loadLocalData();
     }, []);
 
+    useEffect(() => {
+        if (editingDocument && mode === 'edit') {
+            setDocName(editingDocument.name);
+            setDescription(editingDocument.description);
+
+            const category = documentCategories.find(cat => cat.id === editingDocument.doc_categorie_id);
+            if (category) setDocCategory(category);
+
+            const type = documentTypes.find(type => type.id === editingDocument.doc_type_id);
+            if (type) setDocType(type);
+
+            const state = documentStates.find(state => state.id === editingDocument.doc_state_id);
+            if (state) setDocState(state);
+
+            setDocFile(null);
+        } else {
+            setDocName(null);
+            setDescription(null);
+            setDocCategory(null);
+            setDocType(null);
+            setDocState(null);
+            setDocFile(null);
+        }
+    }, [editingDocument, mode, documentCategories, documentTypes, documentStates]);
+
     const handleDrag = (e: React.DragEvent) => {
         e.preventDefault()
         e.stopPropagation()
@@ -92,6 +115,7 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
             "application/pdf",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-excel"
         ];
         if (!allowedTypes.includes(file.type)) {
             setErrors({ ...errors, file: "Tipo de archivo no permitido" })
@@ -102,12 +126,16 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
             return
         }
         setDocFile(file);
+        if (!docName) setDocName(file.name.split('+').join(' ').split('_').join(' '));
         setErrors({ ...errors, file: "" });
         if (file.type === "application/pdf") {
             const typeSelected = documentTypes.find(e => e.type === 'PDF');
             setDocType(typeSelected);
         } else if (file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
             const typeSelected = documentTypes.find(e => e.type === 'XLSX');
+            setDocType(typeSelected);
+        } else if (file.type === "application/vnd.ms-excel") {
+            const typeSelected = documentTypes.find(e => e.type === 'XLS');
             setDocType(typeSelected);
         } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
             const typeSelected = documentTypes.find(e => e.type === 'DOCX');
@@ -140,7 +168,7 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
             newErrors.stateId = "Debe seleccionar un estado"
         }
 
-        if (!docFile) {
+        if (mode === 'create' && !docFile) {
             newErrors.file = "Debe seleccionar un archivo"
         }
 
@@ -158,16 +186,33 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
         setIsSubmitting(true)
 
         try {
-            await documentService.addDocument({
-                name: docName || '',
-                description,
-                docCategorieId: docCategory.id,
-                docCategoriePath: docCategory.folder_path,
-                docTypeId: docType.id,
-                docStateId: docState.id,
-                file: docFile,
-                updatedBy: 'f8945315-25c6-47ef-aadb-67df06d91d19'
-            });
+            if (mode === 'create') {
+                await documentService.addDocument({
+                    name: docName || '',
+                    description,
+                    docCategorieId: docCategory.id,
+                    docCategoriePath: docCategory.folder_path,
+                    docTypeId: docType.id,
+                    docStateId: docState.id,
+                    file: docFile,
+                    updatedBy: 'f8945315-25c6-47ef-aadb-67df06d91d19'
+                });
+                toast("Documento creado exitosamente");
+            } else {
+                await documentService.editDocument({
+                    documentId: editingDocument.id,
+                    name: docName || '',
+                    description,
+                    docCategorieId: docCategory.id,
+                    docCategoriePath: docCategory.folder_path,
+                    docTypeId: docType.id,
+                    docStateId: docState.id,
+                    file: docFile,
+                    updatedBy: 'f8945315-25c6-47ef-aadb-67df06d91d19'
+                });
+                toast("Documento actualizado exitosamente");
+            }
+
             setDocName(null);
             setDescription(null);
             setDocCategory(null);
@@ -177,10 +222,9 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
             setErrors({});
             onOpenChange(false);
 
-            toast("Documento creado exitosamente");
         } catch (error) {
-            console.error("Error al crear documento:", error)
-            toast("Error al crear el documento")
+            console.error(`Error al ${mode === 'create' ? 'crear' : 'actualizar'} documento:`, error)
+            toast(`Error al ${mode === 'create' ? 'crear' : 'actualizar'} el documento`)
         } finally {
             setIsSubmitting(false);
             loadData();
@@ -202,14 +246,19 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
     }
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="h-auto max-w-2xl mx-auto bg-white border-1 border-gray-300 rounded-lg">
-                <DialogHeader>
-                    <DialogTitle className="text-xl font-semibold text-green-800">Nuevo Documento</DialogTitle>
-                    <DialogDescription>
-                        Complete la información del documento que desea subir al repositorio central.
-                    </DialogDescription>
-                </DialogHeader>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="h-auto max-w-2xl mx-auto bg-white border-1 border-gray-300 rounded-lg p-4">
+                <section>
+                    <h1 className="text-xl font-semibold text-green-800">
+                        {mode === 'edit' ? 'Editar Documento' : 'Nuevo Documento'}
+                    </h1>
+                    <p>
+                        {mode === 'edit'
+                            ? 'Modifique la información del documento. El archivo es opcional.'
+                            : 'Complete la información del documento que desea subir al repositorio central.'
+                        }
+                    </p>
+                </section>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-4">
@@ -281,7 +330,7 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
                             {errors.stateId && <p className="text-sm text-red-500">{errors.stateId}</p>}
                         </div>
                         <div className="space-y-2">
-                            <Label>Archivo del Documento *</Label>
+                            <Label>Archivo del Documento {mode === 'create' ? '*' : '(Opcional)'}</Label>
                             {!docFile ? (
                                 <Card
                                     className={`border-2 border-dashed transition-colors ${dragActive
@@ -299,7 +348,10 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
                                         <Upload className="h-8 w-8 text-gray-400 mb-4" />
                                         <div className="text-center">
                                             <p className="text-lg font-medium text-gray-700 mb-2">
-                                                Arrastra tu archivo aquí o haz clic para seleccionar
+                                                {mode === 'edit'
+                                                    ? 'Arrastra un nuevo archivo aquí o haz clic para reemplazar'
+                                                    : 'Arrastra tu archivo aquí o haz clic para seleccionar'
+                                                }
                                             </p>
                                             <p className="text-sm text-gray-500 mb-4">
                                                 Formatos soportados: PDF, Excel, Word.
@@ -345,16 +397,19 @@ export function NewDocumentModal({ open, onOpenChange, loadData }: NewDocumentMo
                         </div>
                     </div>
 
-                    <DialogFooter className="flex gap-2">
+                    <section className="flex gap-2 flex-row justify-end items-center">
                         <Button className="bg-red-700 hover:bg-red-800 cursor-pointer border-none text-white" type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
                             Cancelar
                         </Button>
                         <Button type="submit" className="bg-green-700 hover:bg-green-800 cursor-pointer text-white" disabled={isSubmitting}>
-                            {isSubmitting ? "Creando..." : "Crear Documento"}
+                            {isSubmitting
+                                ? (mode === 'edit' ? "Actualizando..." : "Creando...")
+                                : (mode === 'edit' ? "Actualizar Documento" : "Crear Documento")
+                            }
                         </Button>
-                    </DialogFooter>
+                    </section>
                 </form>
-            </DialogContent >
-        </Dialog >
+            </div >
+        </div >
     )
 }

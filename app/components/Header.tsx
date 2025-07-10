@@ -8,7 +8,7 @@ import Image from "next/image";
 
 const Header = () => {
     return (
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 w-full fixed top-0">
+        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 w-full fixed top-0 z-50">
             <div className="text-xl font-semibold text-[#0A5C36] flex flex-row items-center gap-x-4">
                 <Image src='/udea.png' width='30' height='40' alt="UdeA Logo" />
                 Sistema de Gestión Documental

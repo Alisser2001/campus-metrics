@@ -9,7 +9,7 @@ interface Props {
 
 export const ChatbotIcon: FC<Props> = ({ isOpen, setIsOpen }) => {
     return (
-        <span className="absolute right-[20px] bottom-[20px] flex justify-center items-center rounded-full bg-[#035f2e] w-12 h-12 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+        <span className="fixed right-[20px] bottom-[20px] flex justify-center items-center rounded-full bg-[#035f2e] w-12 h-12 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
             <BotIcon />
         </span>
     )
