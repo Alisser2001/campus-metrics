@@ -14,7 +14,7 @@ export const ChatBotIcon: FC = () => {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="text-[#035f2e]"
+            className="text-[#33691e]"
         >
             <path d="M6 4m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" />
             <path d="M12 2v2" />
