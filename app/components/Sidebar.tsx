@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 const Sidebar = ({ setActiveCategorie, categories, activeCategorie }: any) => {
     return (
-        <div className="w-96 h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-16">
+        <div className="w-80 lg:w-96 h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-16">
             <div className="flex-1 overflow-auto p-4">
                 <h3 className="font-medium text-sm text-gray-500 uppercase tracking-wider mb-3">
                     Categorías
