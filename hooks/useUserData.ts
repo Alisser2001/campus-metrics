@@ -14,11 +14,16 @@ export const useUserData = () => {
             setSession(session);
 
             if (session?.user?.email) {
-                const { data: userData } = await supabase
+                const { data: userData, error: userError } = await supabase
                     .from('udea_user')
                     .select('*')
                     .eq('email', session.user.email)
                     .single();
+
+                if (userError) {
+                    console.error('Error al obtener datos del usuario:', userError);
+                }
+
                 setUser(userData);
             }
             setLoading(false);
@@ -29,11 +34,16 @@ export const useUserData = () => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             setSession(session);
             if (session?.user?.email) {
-                const { data: userData } = await supabase
+                const { data: userData, error: userError } = await supabase
                     .from('udea_user')
                     .select('*')
                     .eq('email', session.user.email)
                     .single();
+
+                if (userError) {
+                    console.error('Error al obtener datos del usuario:', userError);
+                }
+
                 setUser(userData);
             } else {
                 setUser(null);

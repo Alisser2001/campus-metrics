@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/client';
 import { createClient as serverClient } from '../supabase/server';
+import { checkAuthentication } from '../auth/helper';
 
 const supabase = createClient();
 
@@ -15,6 +16,8 @@ const supabase = createClient();
 
 export const documentService = {
     async getDocuments() {
+        await checkAuthentication();
+
         const { data, error } = await supabase
             .from('doc_info')
             .select(`
@@ -74,6 +77,8 @@ export const documentService = {
         updatedBy: string;
     }) {
         try {
+            await checkAuthentication();
+
             const { error: insertError, data: inserted } = await supabase
                 .from('doc_info')
                 .insert([
@@ -151,6 +156,8 @@ export const documentService = {
         updatedBy: string;
     }) {
         try {
+            await checkAuthentication();
+
             const { data: currentDoc, error: fetchError } = await supabase
                 .from('doc_info')
                 .select('*')
@@ -242,6 +249,8 @@ export const documentService = {
 
     async deleteDocument(id: string) {
         try {
+            await checkAuthentication();
+
             const { data: doc, error: fetchError } = await supabase
                 .from('doc_info')
                 .select('doc_path')

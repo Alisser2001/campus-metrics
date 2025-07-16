@@ -63,6 +63,7 @@ const SignUp: React.FC = () => {
         }
         setIsSubmitting(true);
         try {
+            toast('Revisa tu correo para confirmar tu nueva cuenta.')
             const result = await signup(formData);
             if (result?.error) {
                 toast.error(result.error);
