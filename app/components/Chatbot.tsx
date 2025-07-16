@@ -47,7 +47,7 @@ export const Chatbot: FC = () => {
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      const res = await fetch('https://campus-metrics.app.n8n.cloud/webhook/d7b78a6c-ee96-46a7-bb54-514463d721b8', {
+      const res = await fetch('https://emmanuel-valbuena.app.n8n.cloud/webhook/d9e8332b-9881-4fe4-b794-6f31c245bd07', {
         method: 'POST',
         body: JSON.stringify({ message: input, sessionId: currentThreadId }),
         headers: { 'Content-Type': 'application/json' },
