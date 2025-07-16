@@ -17,6 +17,37 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { formatDate } from "@/utils/date-utils"
 import { documentService } from "@/utils/services/documents"
 import { useState } from "react"
+import { createClient } from "@/utils/supabase/client"
+import { toast } from "sonner"
+
+export const downloadHelper = {
+    async downloadFile(filePath: string, fileName: string) {
+        const supabase = createClient();
+        try {
+            const { data: { user }, error: authError } = await supabase.auth.getUser();
+            if (authError || !user) {
+                throw new Error('Usuario no autenticado');
+            }
+            const { data, error } = await supabase.storage
+                .from('campus-metrics')
+                .createSignedUrl(filePath, 3600);
+
+            if (error) throw error;
+
+            const link = document.createElement("a");
+            link.href = data.signedUrl;
+            link.download = fileName;
+            link.target = "_blank";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            return true;
+        } catch (error) {
+            console.error('Error en la descarga:', error);
+            return false;
+        }
+    }
+};
 
 export function DocumentList({
     searchTerm,
@@ -42,15 +73,13 @@ export function DocumentList({
     const endIndex = startIndex + itemsPerPage;
     const currentDocuments = sortedDocuments.slice(startIndex, endIndex);
 
-    const handleDownload = (url: string, fileName: string) => {
-        const link = document.createElement("a");
-        link.href = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/campus-metrics/` + url;
-        link.download = fileName;
-        link.target = "_blank";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const handleDownload = async (filePath: string, fileName: string) => {
+        const success = await downloadHelper.downloadFile(filePath, fileName);
+        if (!success) {
+            toast.error('Error al descargar el archivo');
+        }
     };
+
     const handleDeleteDoc = async () => {
         if (!selectedDoc) return;
         try {
